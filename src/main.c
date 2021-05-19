@@ -33,12 +33,12 @@ int main(void) {
     }
     sysinfo(&systemInfo);
     uname(&kernelInfo);
-    printf("# %lu\n", time(NULL));
-    printf("# %s %s %s %s \n", kernelInfo.sysname, kernelInfo.release,
+    printf("%lu\n", time(NULL));
+    printf("%s %s %s %s \n", kernelInfo.sysname, kernelInfo.release,
            kernelInfo.version, kernelInfo.machine);
-    printf("# %s - Cores: %i, Threads: %i\n", data.brand_str, data.num_cores,
+    printf("%s - Cores: %i; Threads: %i\n", data.brand_str, data.num_cores,
            data.num_logical_cpus);
-    printf("# Memory (in megabytes) - Total: %.0f, Used: %.0f, Free: %.0f\n",
+    printf("Memory (in megabytes) - Total: %.0f; Used: %.0f; Free: %.0f\n",
            systemInfo.totalram / 1000000.0,
            (systemInfo.totalram - systemInfo.freeram) / 1000000.0,
            systemInfo.freeram / 1000000.0);
@@ -47,9 +47,9 @@ int main(void) {
         workers[i].entry = TDeadline_Entry;
         pthread_create(&(workers[i].tid), NULL, workers[i].entry, &i);
         pthread_join(workers[i].tid, NULL);
-        printf("# End of test (%i of %i)\n", i + 1, DL_FLAG_AMT);
+        printf("End of test (%i of %i)\n", i + 1, DL_FLAG_AMT);
     }
-    printf("# %lu EOF\n", time(NULL));
+    printf("%lu EOF\n", time(NULL));
     pthread_exit(0);  // Failsafe, not really needed
     return (EXIT_SUCCESS);
 }

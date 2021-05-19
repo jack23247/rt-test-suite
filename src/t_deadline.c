@@ -9,8 +9,8 @@ void TDeadline_DlMissHandler(int sig) {
 static inline void TDeadline_Payload(struct timespec* gts, stats_t* stats) {
     nsec_t curTime = 0, prevTime = 0, deltaTime = 0;
     printf(
-        "#\n# SCHED_DEADLINE Test w/o payload (Period: 20ms, Runtime/WCET: "
-        "10ms, Deadline: 11ms)\n# iter,deltat\n");
+        "\nSCHED_DEADLINE Test w/o payload (Period: 20ms; Runtime/WCET: "
+        "10ms; Deadline: 11ms)\nIteration,Jitter\n");
     for (;;) {
         // doNothing();
         prevTime = curTime;
@@ -37,8 +37,8 @@ static inline void TDeadline_Payload_RDRand(struct timespec* gts,
     unsigned int randomness = 0, dieRoll = 0;
     int rc = 1;
     printf(
-        "#\n# SCHED_DEADLINE Test w/ RDRAND dice demo (Period: 20ms, "
-        "Runtime/WCET: 10ms, Deadline: 11ms)\n# iter,deltat,dieroll\n");
+        "\nSCHED_DEADLINE Test w/ RDRAND dice demo (Period: 20ms; "
+        "Runtime/WCET: 10ms; Deadline: 11ms)\nIteration,Jitter,DieRoll\n");
     for (;;) {
         rc &= _rdrand32_step(&randomness);
         assert(rc != 0);
@@ -67,10 +67,11 @@ static inline void TDeadline_Payload_RDRandHvy(struct timespec* gts,
     unsigned int randomness = 0, dieRollTotal = 0;
     int rc = 1;
     printf(
-        "#\n# SCHED_DEADLINE Test w/ RDRAND dice demo (100 rolls/cycle) "
-        "(Period: 20ms, Runtime/WCET: 10ms, Deadline: 11ms)\n# "
-        "iter,deltat,dieroll\n");
+        "\nSCHED_DEADLINE Test w/ RDRAND dice demo (100 rolls/cycle) "
+        "(Period: 20ms; Runtime/WCET: 10ms; Deadline: 11ms)\n"
+        "Iteration,Jitter,DieRollTotal\n");
     for (;;) {
+        dieRollTotal = 0;
         for (int i = 0; i < 100; i++) {
             rc &= _rdrand32_step(&randomness);
             assert(rc != 0);
