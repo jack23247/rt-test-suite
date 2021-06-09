@@ -34,15 +34,12 @@ static inline void TDeadline_Payload(struct timespec* gts, stats_t* stats) {
 static inline void TDeadline_Payload_RDRand(struct timespec* gts,
                                             stats_t* stats) {
     nsec_t curTime = 0, prevTime = 0, deltaTime = 0;
-    unsigned int randomness = 0, dieRoll = 0;
-    int rc = 1;
+    unsigned int dieRoll = 0;
     printf(
-        "\nSCHED_DEADLINE Test w/ RDRAND dice demo (Period: 20ms; "
+        "\nSCHED_DEADLINE Test w/ rand() dice demo (Period: 20ms; "
         "Runtime/WCET: 10ms; Deadline: 11ms)\nIteration,Jitter,DieRoll\n");
     for (;;) {
-        rc &= _rdrand32_step(&randomness);
-        assert(rc != 0);
-        dieRoll = ((randomness % 6) + 1);
+        dieRoll = ((rand() % 6) + 1);
         prevTime = curTime;
         curTime = HTime_GetNsDelta(gts);
         if (curTime != 0 && prevTime != 0) {
@@ -50,7 +47,7 @@ static inline void TDeadline_Payload_RDRand(struct timespec* gts,
         }
         if (deltaTime >= DL_DELTA_WARN_THRESHOLD) {
             syslog(LOG_WARNING, "%s%lluns",
-                   "(T_DEADLINE_RDRAND) Abnormal time delta detected between "
+                   "(T_DEADLINE_RAND) Abnormal time delta detected between "
                    "cycles: ",
                    deltaTime);
         }
@@ -64,27 +61,24 @@ static inline void TDeadline_Payload_RDRand(struct timespec* gts,
 static inline void TDeadline_Payload_RDRandHvy(struct timespec* gts,
                                                stats_t* stats) {
     nsec_t curTime = 0, prevTime = 0, deltaTime = 0;
-    unsigned int randomness = 0, dieRollTotal = 0;
-    int rc = 1;
+    unsigned int dieRollTotal = 0;
     printf(
-        "\nSCHED_DEADLINE Test w/ RDRAND dice demo (100 rolls/cycle) "
+        "\nSCHED_DEADLINE Test w/ rand() dice demo (100 rolls/cycle) "
         "(Period: 20ms; Runtime/WCET: 10ms; Deadline: 11ms)\n"
         "Iteration,Jitter,DieRollTotal\n");
     for (;;) {
         dieRollTotal = 0;
         for (int i = 0; i < 100; i++) {
-            rc &= _rdrand32_step(&randomness);
-            assert(rc != 0);
-            dieRollTotal += ((randomness % 6) + 1);
+            dieRollTotal += ((rand() % 6) + 1);
         }
         prevTime = curTime;
-        curTime = HTime_GetNsDelta(gts);
+        curTime = HTime_GetNsDelta(gts); // TODO move this at the beginning of the payload we don't care how much it takes to execute the dierolls
         if (curTime != 0 && prevTime != 0) {
             deltaTime = abs((int)(curTime - prevTime - (DL_PERIOD)));
         }
         if (deltaTime >= DL_DELTA_WARN_THRESHOLD) {
             syslog(LOG_WARNING, "%s%lluns",
-                   "(T_DEADLINE_RDRAND_HVY) Abnormal time delta detected "
+                   "(T_DEADLINE_RAND_HVY) Abnormal time delta detected "
                    "between cycles: ",
                    deltaTime);
         }
@@ -118,10 +112,10 @@ void* TDeadline_Entry(void* args) {
         case DL_FLAG_NONE:
             TDeadline_Payload(&gts, &stats);
             break;
-        case DL_FLAG_RDRAND:
+        case DL_FLAG_RAND:
             TDeadline_Payload_RDRand(&gts, &stats);
             break;
-        case DL_FLAG_RDRAND_HEAVY:
+        case DL_FLAG_RAND_HEAVY:
             TDeadline_Payload_RDRandHvy(&gts, &stats);
             break;
         default:

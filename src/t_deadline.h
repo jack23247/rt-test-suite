@@ -20,8 +20,8 @@
 
 enum dl_flags {
     DL_FLAG_NONE = 0,
-    DL_FLAG_RDRAND,
-    DL_FLAG_RDRAND_HEAVY,
+    DL_FLAG_RAND,
+    DL_FLAG_RAND_HEAVY,
     DL_FLAG_AMT  // Amount
 };
 

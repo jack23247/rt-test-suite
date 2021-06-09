@@ -42,6 +42,7 @@ int main(void) {
            systemInfo.totalram / 1000000.0,
            (systemInfo.totalram - systemInfo.freeram) / 1000000.0,
            systemInfo.freeram / 1000000.0);
+    srand(time(NULL));
     worker_t workers[DL_FLAG_AMT];
     for (int i = 0; i < DL_FLAG_AMT; i++) {  // Dispatch workers
         workers[i].entry = TDeadline_Entry;

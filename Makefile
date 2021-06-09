@@ -3,7 +3,7 @@
 CC = gcc
 LD = gcc
 
-BFLAGS = -O3 -mrdrnd # -O0 -ggdb #-O3
+BFLAGS = -O3 # -O0 -ggdb #-O3
 CFLAGS = -I. -std=gnu99 -Wall -Wextra -pedantic
 WITH = -pthread -lrt -l:libcpuid.a # -lm
 
